@@ -41,3 +41,7 @@ def instruction_detail_view(request, instruction_id):
         'summary': summary_data,
     }
     return render(request, 'instruction_detail.html', context)
+
+
+def first_page(request):
+    return render(request, 'Home.html')

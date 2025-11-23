@@ -5,4 +5,5 @@ urlpatterns = [
     path('compass/', views.compass_view, name='compass'),
     path('instructions/<int:instruction_id>/',
          views.instruction_detail_view, name='instruction_detail'),
+    path('', views.first_page, name='home'),
 ]
