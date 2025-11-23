@@ -15,7 +15,6 @@ class InstructionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Customizing label for clarity
         self.fields['previous_instruction'].label = "Linked to (Previous Step)"
         self.fields['previous_instruction'].empty_label = "None (Start of a new route)"
         # Optional: Order querysets if needed, e.g., newest first

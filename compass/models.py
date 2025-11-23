@@ -71,4 +71,3 @@ class Instruction(models.Model):
 
     def __str__(self):
         return f"#{self.id} - {self.distance}nm {self.get_direction_display()}"
-# Create your models here.

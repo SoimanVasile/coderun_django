@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instruction #{{ instruction.id }}</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background-color: #f4f1ea; padding: 20px; }
+        .card { max-width: 600px; margin: 40px auto; background: white; padding: 30px; border: 4px double #8b4513; box-shadow: 5px 5px 15px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+        
+        .compass-visual { 
+            width: 100px; 
+            height: 100px; 
+            border: 2px solid #333; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: #fff;
+        }
+        
+        /* The Arrow SVG */
+        .arrow { width: 60px; height: 60px; transition: transform 0.5s ease; }
+
+        .stat-row { display: flex; justify-content: space-between; margin: 10px 0; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .risk-high { color: red; font-weight: bold; }
+        .risk-low { color: green; font-weight: bold; }
+
+        #summary-panel { display: none; background: #ffebcd; padding: 15px; margin-top: 20px; border: 1px dashed #8b4513; }
+        
+        .btn { cursor: pointer; padding: 10px 20px; border: none; font-size: 1em; }
+        .btn-back { background: #666; color: white; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+        .btn-summary { background: #daa520; color: #3b302a; width: 100%; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'compass' %}" class="btn btn-back">← Back to Compass</a>
+
+    <div class="card">
+        <div class="header">
+            <div>
+                <h1>Coordinate #{{ instruction.id }}</h1>
+                <h3 style="color: #555;">{{ instruction.distance }} NM {{ instruction.get_direction_display }}</h3>
+            </div>
+            
+            <!-- Visual Compass -->
+            <div class="compass-visual">
+                <!-- Simple Arrow SVG -->
+                <svg class="arrow" viewBox="0 0 24 24" style="transform: rotate({{ instruction.get_rotation_degrees }}deg);">
+                    <path fill="#8b4513" d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
+                </svg>
+            </div>
+        </div>
+
+        <p><strong>Description:</strong><br>{{ instruction.description }}</p>
+
+        <div class="stat-row">
+            <span>Current Risk Level:</span>
+            <span class="{% if instruction.risk_level > 50 %}risk-high{% else %}risk-low{% endif %}">
+                {{ instruction.risk_level }}/100
+            </span>
+        </div>
+
+        <div class="stat-row">
+            <span>Previous Link:</span>
+            <span>
+                {% if instruction.previous_instruction %}
+                    Instruction #{{ instruction.previous_instruction.id }}
+                {% else %}
+                    <em>Start of Route</em>
+                {% endif %}
+            </span>
+        </div>
+
+        <button class="btn btn-summary" onclick="toggleSummary()">🗺️ View Route Summary</button>
+
+        <div id="summary-panel">
+            <h3>Route Analysis (Back to Start)</h3>
+            <p><strong>Total Distance:</strong> {{ summary.total_distance }} Nautical Miles</p>
+            <p><strong>Average Risk:</strong> {{ summary.average_risk }}%</p>
+            <p><strong>Steps in Chain:</strong> {{ summary.step_count }}</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleSummary() {
+            var panel = document.getElementById('summary-panel');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+            } else {
+                panel.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

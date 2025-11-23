@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pirate Compass</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background-color: #f4f1ea; color: #3b302a; padding: 20px; }
+        h1, h2 { text-align: center; color: #8b4513; }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        /* Form Styling */
+        .form-box { background: #fff8dc; padding: 20px; border: 2px dashed #8b4513; margin-bottom: 30px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { background-color: #8b4513; color: white; padding: 10px 20px; border: none; cursor: pointer; width: 100%; font-size: 1.1em; }
+        button:hover { background-color: #a0522d; }
+
+        /* List Styling */
+        .instruction-list { list-style: none; padding: 0; }
+        .instruction-item { background: white; border: 1px solid #ddd; margin-bottom: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .instruction-info { font-size: 1.2em; }
+        .details-btn { text-decoration: none; background: #2f4f4f; color: white; padding: 5px 15px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏴‍☠️ The Captain's Compass 🏴‍☠️</h1>
+
+        <!-- Add Instruction Form -->
+        <div class="form-box">
+            <h2>Add New Coordinate</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small style="color: grey;">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit">Mark the Map</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <!-- List of Instructions -->
+        <h2>Known Route Points</h2>
+        <ul class="instruction-list">
+            {% for item in instructions %}
+                <li class="instruction-item">
+                    <span class="instruction-info">
+                        <strong>{{ item.get_direction_display }}</strong> for {{ item.distance }} nm
+                    </span>
+                    <a href="{% url 'instruction_detail' item.id %}" class="details-btn">Details</a>
+                </li>
+            {% empty %}
+                <p style="text-align: center;">No instructions in the log yet, Captain.</p>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
